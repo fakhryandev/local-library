@@ -4,15 +4,21 @@ var path = require("path");
 var cookieParser = require("cookie-parser");
 var logger = require("morgan");
 
+const dotenv = require("dotenv");
+dotenv.config();
+
 //Set up mongoose connnection
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = ""; //DB url
+const mongoDB = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@locallibrary.281rz0n.mongodb.net/local_library`;
 
 main().catch((err) => console.error(err));
 
 async function main() {
-  await mongoose.connect(mongoDB);
+  await mongoose.connect(mongoDB, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 }
 
 var indexRouter = require("./routes/index");
