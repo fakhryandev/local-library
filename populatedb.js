@@ -35,37 +35,29 @@ function authorCreate(first_name, family_name, d_birth, d_death, cb) {
 
   const author = new Author(authordetail);
 
-  author
-    .save()
-    .then(() => {
-      console.log("New Author: " + author);
-      authors.push(author);
-      cb(null, author);
-    })
-    .catch((err) => {
-      if (err) {
-        cb(err, null);
-        return;
-      }
-    });
+  author.save(function (err) {
+    if (err) {
+      cb(err, null);
+      return;
+    }
+    console.log("New Author: " + author);
+    authors.push(author);
+    cb(null, author);
+  });
 }
 
 function genreCreate(name, cb) {
   const genre = new Genre({ name: name });
 
-  genre
-    .save()
-    .then(() => {
-      console.log("New Genre: " + genre);
-      genres.push(genre);
-      cb(null, genre);
-    })
-    .catch((err) => {
-      if (err) {
-        cb(err, null);
-        return;
-      }
-    });
+  genre.save(function (err) {
+    if (err) {
+      cb(err, null);
+      return;
+    }
+    console.log("New Genre: " + genre);
+    genres.push(genre);
+    cb(null, genre);
+  });
 }
 
 function bookCreate(title, summary, isbn, author, genre, cb) {
@@ -78,20 +70,15 @@ function bookCreate(title, summary, isbn, author, genre, cb) {
   if (genre != false) bookdetail.genre = genre;
 
   const book = new Book(bookdetail);
-
-  book
-    .save()
-    .then(() => {
-      console.log("New Book: " + book);
-      books.push(book);
-      cb(null, book);
-    })
-    .catch((err) => {
-      if (err) {
-        cb(err, null);
-        return;
-      }
-    });
+  book.save(function (err) {
+    if (err) {
+      cb(err, null);
+      return;
+    }
+    console.log("New Book: " + book);
+    books.push(book);
+    cb(null, book);
+  });
 }
 
 function bookInstanceCreate(book, imprint, due_back, status, cb) {
@@ -103,21 +90,16 @@ function bookInstanceCreate(book, imprint, due_back, status, cb) {
   if (status != false) bookinstancedetail.status = status;
 
   const bookinstance = new BookInstance(bookinstancedetail);
-
-  bookinstance
-    .save()
-    .then(() => {
-      console.log("New BookInstance: " + bookinstance);
-      bookinstances.push(bookinstance);
-      cb(null, book);
-    })
-    .catch((err) => {
-      if (err) {
-        console.log("ERROR CREATING BookInstance: " + bookinstance);
-        cb(err, null);
-        return;
-      }
-    });
+  bookinstance.save(function (err) {
+    if (err) {
+      console.log("ERROR CREATING BookInstance: " + bookinstance);
+      cb(err, null);
+      return;
+    }
+    console.log("New BookInstance: " + bookinstance);
+    bookinstances.push(bookinstance);
+    cb(null, book);
+  });
 }
 
 function createGenreAuthors(cb) {
