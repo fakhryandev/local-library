@@ -101,7 +101,7 @@ exports.author_create_post = [
   },
 ];
 
-exports.author_delete_get = (req, res) => {
+exports.author_delete_get = (req, res, next) => {
   async.parallel(
     {
       author(callback) {
@@ -128,7 +128,7 @@ exports.author_delete_get = (req, res) => {
   );
 };
 
-exports.author_delete_post = (req, res) => {
+exports.author_delete_post = (req, res, next) => {
   async.parallel(
     {
       author(callback) {
