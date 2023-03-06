@@ -102,11 +102,66 @@ exports.author_create_post = [
 ];
 
 exports.author_delete_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: Author delete GET");
+  async.parallel(
+    {
+      author(callback) {
+        Author.findById(req.params.id).exec(callback);
+      },
+      authors_book(callback) {
+        Book.find({ author: req.params.id }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+      if (results.author == null) {
+        res.redirect("/catalog/authors");
+      }
+
+      res.render("author_delete", {
+        title: "Delete Author",
+        author: results.author,
+        author_books: results.authors_book,
+      });
+    }
+  );
 };
 
 exports.author_delete_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: Author delete post");
+  async.parallel(
+    {
+      author(callback) {
+        Author.findById(req.body.authorid).exec(callback);
+      },
+      authors_books(callback) {
+        Book.find({ author: req.body.authorid }).exec(callback);
+      },
+    },
+    (err, results) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (results.authors_books.length > 0) {
+        res.render("author_delete", {
+          title: "Delete Author",
+          author: results.author,
+          author_books: results.authors_book,
+        });
+
+        return;
+      }
+
+      Author.findByIdAndRemove(req.body.authorid, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        res.redirect("/catalog/authors");
+      });
+    }
+  );
 };
 
 exports.author_update_get = (req, res) => {
