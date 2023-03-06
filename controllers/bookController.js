@@ -190,7 +190,10 @@ exports.book_delete_get = (req, res, next) => {
   async.parallel(
     {
       book(callback) {
-        Book.findById(req.params.id).exec(callback);
+        Book.findById(req.params.id)
+          .populate("author")
+          .populate("genre")
+          .exec(callback);
       },
       book_instance(callback) {
         BookInstance.find({ book: req.params.id }).exec(callback);
@@ -201,7 +204,7 @@ exports.book_delete_get = (req, res, next) => {
         next(err);
       }
       if (results.book == null) {
-        res.redirect("/catalog/book");
+        res.redirect("/catalog/books");
       }
 
       res.render("book_delete", {
@@ -229,8 +232,22 @@ exports.book_delete_post = (req, res, next) => [
       }
 
       if (results.book_instance.length > 0) {
-        res.remder("");
+        res.render("book_delete", {
+          title: "Delete Book",
+          book: results.book,
+          book_instance: results.book_instance,
+        });
+
+        return;
       }
+
+      Book.findByIdAndRemove(req.body.bookid, (err) => {
+        if (err) {
+          return next(err);
+        }
+
+        res.redirect("/catalog/books");
+      });
     }
   ),
 ];

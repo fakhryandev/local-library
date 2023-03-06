@@ -2,27 +2,42 @@ extends layout
 
 block content
   h1 #{ title }: #{ book.title }
-  p= book.summary
+  p #[strong Author:]
+    |
+    a(href=book.author.url)  #{ book.author.name }
+  p #[strong Summary:] #{ book.summary }
+  p #[strong ISBN:] #{ book.isbn }
+  p #[strong Genre:]
+    each val, index in book.genre
+      a(href=val.url)  #{ val.name }
+      if index < book.genre.length - 1
+      | ,
     if book_instance.length
       p #[strong Delete the following book instance before attempting to delete this book.]
 
       div(style="margin-left: 20px; margin-top: 20px")
-      h4 Book Instances
+      h4 Copies
 
       dl 
       each book in book_instance
         dt
-          a(href=book.url) #{ bookinstance.imprint }
-        dd #{ bookinstance.due_back_formatted }
+          a(href=book.url) #{ book.imprint }
+        dd #{ book.due_back_formatted } -
+          if book.status == 'Available'
+            span.text-success  #{ book.status }
+          else if book.status == 'Maintenance'
+            span.text-danger  #{ book.status }
+          else
+            span.text-warning  #{ book.status }
     else
       p Do you really want to delete this Book ?
 
-      form(action="", method="post") 
-      .form-group
-        input#bookid.form-control(
-          type="hidden",
-          name="bookid",
-          required="true",
-          value=book._id
-        )
-        button.btn.btn-primary(type="submit") Delete
+      form(action="", method="post")
+        .form-group
+          input#bookid.form-control(
+            type="hidden",
+            name="bookid",
+            required="true",
+            value=book._id
+          )
+          button.btn.btn-primary(type="submit") Delete

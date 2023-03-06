@@ -107,7 +107,7 @@ exports.genre_delete_get = (req, res, next) => {
       }
 
       if (results.genre == null) {
-        res.redirect("/catalog/genre");
+        res.redirect("/catalog/genres");
       }
 
       res.render("genre_delete", {
