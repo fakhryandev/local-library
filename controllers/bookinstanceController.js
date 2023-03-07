@@ -37,12 +37,48 @@ exports.bookinstance_detail = (req, res, next) => {
     });
 };
 
-exports.bookinstance_delete_get = (req, res) => {
-  res.send("NOT IMPLEMENTED: BookInstance delete GET");
+exports.bookinstance_delete_get = (req, res, next) => {
+  BookInstance.findById(req.params.id)
+    .populate("book")
+    .exec((err, bookinstance) => {
+      if (err) {
+        return next(err);
+      }
+
+      if (bookinstance == null) {
+        res.redirect("/catalog/bookinstances");
+      }
+
+      res.render("bookinstance_delete", {
+        title: "Delete Book Instances",
+        bookinstance,
+      });
+    });
 };
 
-exports.bookinstance_delete_post = (req, res) => {
-  res.send("NOT IMPLEMENTED: BookInstance delete POST");
+exports.bookinstance_delete_post = (req, res, next) => {
+  BookInstance.findById(req.body.bookinstanceid).exec((err, bookinstance) => {
+    if (err) {
+      return next(err);
+    }
+
+    if (bookinstance.status != "Available") {
+      res.render("bookinstance_delete", {
+        title: "Delete Book Instances",
+        bookinstance,
+      });
+
+      return;
+    }
+
+    BookInstance.findByIdAndRemove(req.body.bookinstanceid, (err) => {
+      if (err) {
+        return next(err);
+      }
+
+      res.redirect("/catalog/bookinstances");
+    });
+  });
 };
 
 exports.bookinstance_create_get = (req, res) => {
