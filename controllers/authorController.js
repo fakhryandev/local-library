@@ -4,6 +4,8 @@ const Book = require("../models/book");
 const async = require("async");
 const { body, validationResult } = require("express-validator");
 
+const moment = require("moment");
+
 exports.author_list = (req, res, next) => {
   Author.find()
     .sort([["family_name", "ascending"]])
@@ -177,9 +179,21 @@ exports.author_update_get = (req, res, next) => {
       return next(err);
     }
 
+    // const birth = author.date_of_birth;
+    // const year = birth.getFullYear();
+    // let month = birth.getMonth() + 1;
+    // let day = birth.getDate();
+
+    // if (day < 10) day = `0${day}`;
+    // if (month < 10) month = `0${month}`;
+
+    // const formattedBirth = `${year}-${month}-${day}`;
+    // author.date_of_birth = formattedBirth;
+
     res.render("author_form", {
       title: "Update Author",
       author,
+      moment,
     });
   });
 };

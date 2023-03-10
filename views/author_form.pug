@@ -26,14 +26,14 @@ block content
       input#date_of_birth.form-control(
         type="date",
         name="date_of_birth",
-        value=undefined === author ? "" : author.date_of_birth
+        value=undefined === author ? "" : moment(author.date_of_birth).format("yyyy-MM-DD")
       )
     .form-group
       label(for="date_of_death") Date of death:
       input#date_of_death.form-control(
         type="date",
         name="date_of_death",
-        value=undefined === author ? "" : author.date_of_death
+        value=undefined === author ? "" : moment(author.date_of_death).format("yyyy-MM-DD")
       )
     button.btn.btn-primary(type="submit") Submit
     if errors
