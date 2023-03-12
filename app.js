@@ -10,7 +10,13 @@ dotenv.config();
 //Set up mongoose connnection
 const mongoose = require("mongoose");
 mongoose.set("strictQuery", false);
-const mongoDB = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@locallibrary.281rz0n.mongodb.net/local_library`;
+
+const mongoDevDBURI = `mongodb+srv://${process.env.MONGO_USERNAME}:${process.env.MONGO_PASSWORD}@locallibrary.281rz0n.mongodb.net/local_library`;
+
+const mongoDB =
+  process.env.NODE_ENV === "production"
+    ? process.env.MONGO_LIVE_URI
+    : mongoDevDBURI;
 
 main().catch((err) => console.error(err));
 
@@ -24,12 +30,17 @@ async function main() {
 var indexRouter = require("./routes/index");
 var usersRouter = require("./routes/users");
 const catalogRouter = require("./routes/catalog");
+const compression = require("compression");
+const { default: helmet } = require("helmet");
 
 var app = express();
 
 // view engine setup
 app.set("views", path.join(__dirname, "views"));
 app.set("view engine", "pug");
+
+app.use(compression());
+app.use(helmet());
 
 app.use(logger("dev"));
 app.use(express.json());
