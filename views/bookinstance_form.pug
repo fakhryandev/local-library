@@ -34,7 +34,7 @@ block content
       input#due_back.form-control(
         type="date",
         name="due_back",
-        value=unedfined === bookinstance ? "" : moment(bookinstance.due_back).format("yyyy-MM-DD")
+        value=undefined === bookinstance ? "" : moment(bookinstance.due_back).format("yyyy-MM-DD")
       )
 
     .form-group

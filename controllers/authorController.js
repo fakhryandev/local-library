@@ -226,6 +226,7 @@ exports.author_update_post = [
         title: "Update Author",
         errors: errors.array(),
         author,
+        moment,
       });
 
       return;
